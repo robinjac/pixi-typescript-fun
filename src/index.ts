@@ -37,15 +37,16 @@ window.onload = async (): Promise<void> => {
   const textures = await loadGameAssets();
 
   const backgroundSprite = Sprite.from(textures.background);
-  const button = createButton(textures.sym1, { x: 0.5, y: 0.5 }, () =>
-    console.log("hello world")
-  );
+  const button = createButton(textures.sym1, { x: 0.5, y: 0.5 }, (self) => {
+    self.active = !self.active
+    console.log("hello world", self.active);
+  });
 
   document.body.appendChild<HTMLCanvasElement>(game.view as HTMLCanvasElement);
   resizeCanvas();
 
   stage.addChild(backgroundSprite);
-  stage.addChild(button);
+  stage.addChild(button.sprite);
 };
 
 window.addEventListener("resize", resizeCanvas);

@@ -2,19 +2,47 @@ import { Sprite, SpriteSource } from "pixi.js";
 import { Point } from "./helpers";
 import { gameHeight, gameWidth } from "./shared";
 
-function createButton(source: SpriteSource, { x, y }: Point, onClick: () => void) {
-  const btn = Sprite.from(source);
+type Button = {
+  active: boolean;
+  sprite: Sprite;
+};
 
-  btn.interactive = true;
-  btn.anchor.set(0.5);
+function createButton(
+  source: SpriteSource,
+  { x, y }: Point,
+  onClick: (btn: Button) => void
+) {
+  const sprite = Sprite.from(source);
+  
+  let active = true;
+  const btn = {
+    sprite: sprite,
+    set active(value: boolean) {
+      active = value;
+      
+      if(active) {
+        sprite.alpha = 1;
+      }else{
+        sprite.alpha = 0.5;
+      }
+    },
+    get active() {
+      return active;
+    },
+  };
 
-  btn.width = 90;
-  btn.height = 90;
+  sprite.interactive = true;
+  sprite.anchor.set(0.5);
 
-  btn.x = btn.width / 2 + (gameWidth - btn.width) * x;
-  btn.y = btn.height / 2 + (gameHeight - btn.height) * y;
+  sprite.width = 90;
+  sprite.height = 90;
 
-  btn.on("pointertap", onClick);
+  sprite.x = sprite.width / 2 + (gameWidth - sprite.width) * x;
+  sprite.y = sprite.height / 2 + (gameHeight - sprite.height) * y;
+
+  sprite.on("pointertap", () => {
+    onClick(btn);
+  });
 
   return btn;
 }
