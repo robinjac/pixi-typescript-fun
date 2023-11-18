@@ -19,7 +19,7 @@ This source code is an example, you can use it in any way you want. So feel free
 ## Commands:
 
 - `npm install` - run installation of npm packages (should be called first)
-- `npm run start` - start watching for files and open's server on localhost:8080
+- `npm start` - start watching for files and open's server on localhost:8080
 
 ## NOTE - SENDING TEST BACK WITH MAIL
 
