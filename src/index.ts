@@ -14,7 +14,7 @@ const app = new Application({
 const stage = app.stage;
 
 async function loadGameAssets() {
-  const otherSprites: Tuple<string>[] = [
+  const otherTextures: Tuple<string>[] = [
     ["background", "assets/Background.png"],
     ["blank", "assets/blank.png"],
     ["button", "assets/button.png"],
@@ -23,15 +23,15 @@ async function loadGameAssets() {
     ["win", "assets/win.png"],
   ];
 
-  const symSprites: Tuple<string>[] = Array.from({ length: 9 }, (_, index) => [
+  const symTextures: Tuple<string>[] = Array.from({ length: 9 }, (_, index) => [
     `sym${index + 1}`,
     `assets/sym${index + 1}.png`,
   ]);
 
-  const sprites: Tuple<string>[] = [...otherSprites, ...symSprites];
-  const assetKeys = sprites.map(takeFirst);
+  const textures: Tuple<string>[] = [...otherTextures, ...symTextures];
+  const assetKeys = textures.map(takeFirst);
 
-  Assets.add(assetKeys, sprites.map(takeSecond));
+  Assets.add(assetKeys, textures.map(takeSecond));
 
   return Assets.load(assetKeys);
 }
