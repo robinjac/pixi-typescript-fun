@@ -1,18 +1,8 @@
 import "./style.css";
-import { Assets, Sprite, Application } from "pixi.js";
+import { Assets, Sprite } from "pixi.js";
 import { Tuple, takeFirst } from "./helpers";
 import { createButton } from "./button";
-
-const gameWidth = 1136;
-const gameHeight = 640;
-
-const app = new Application({
-  backgroundColor: 0xd3d3d3,
-  width: gameWidth,
-  height: gameHeight,
-});
-
-const stage = app.stage;
+import { game, stage } from "./shared";
 
 async function loadGameAssets() {
   const otherTextures: Tuple<string>[] = [
@@ -32,25 +22,30 @@ async function loadGameAssets() {
   const textures: Tuple<string>[] = [...otherTextures, ...symTextures];
   const assetKeys = textures.map(takeFirst);
 
-  textures.forEach(([key, url]) => Assets.add(key, url))
+  textures.forEach(([key, url]) => Assets.add(key, url));
 
   return Assets.load(assetKeys);
 }
 
 function resizeCanvas(): void {
-  app.renderer.resize(window.innerWidth, window.innerHeight);
-  stage.scale.x = window.innerWidth / gameWidth;
-  stage.scale.y = window.innerHeight / gameHeight;
+  game.renderer.resize(window.innerWidth, window.innerHeight);
+  //stage.scale.x = window.innerWidth / gameWidth;
+  //stage.scale.y = window.innerHeight / gameHeight;
 }
 
 window.onload = async (): Promise<void> => {
   const textures = await loadGameAssets();
-  const backgroundSprite = Sprite.from(textures.background);
 
-  document.body.appendChild<HTMLCanvasElement>(app.view as HTMLCanvasElement);
+  const backgroundSprite = Sprite.from(textures.background);
+  const button = createButton(textures.sym1, { x: 0.5, y: 0.5 }, () =>
+    console.log("hello world")
+  );
+
+  document.body.appendChild<HTMLCanvasElement>(game.view as HTMLCanvasElement);
   resizeCanvas();
 
   stage.addChild(backgroundSprite);
+  stage.addChild(button);
 };
 
 window.addEventListener("resize", resizeCanvas);
