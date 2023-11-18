@@ -15,7 +15,7 @@ const stage = app.stage;
 window.onload = async (): Promise<void> => {
   const textures = await loadGameAssets();
 
-  document.body.appendChild(app.view as any);
+  document.body.appendChild<HTMLCanvasElement>(app.view as HTMLCanvasElement);
 
   resizeCanvas();
 
