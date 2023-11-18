@@ -13,34 +13,49 @@ function createButton(
   onClick: (btn: Button) => void
 ) {
   const sprite = Sprite.from(source);
-  
+
+  sprite.interactive = true;
+  sprite.anchor.set(0.5);
+
+  const width = 90;
+  const height = 90;
+
+  sprite.alpha = 1;
+  sprite.width = width;
+  sprite.height = height;
+
+  sprite.x = sprite.width / 2 + (gameWidth - sprite.width) * x;
+  sprite.y = sprite.height / 2 + (gameHeight - sprite.height) * y;
+
+  const setScale = (scale: number) => {
+    sprite.width = width * scale;
+    sprite.height = height * scale;
+  };
+
+  // Button state
   let active = true;
+  let pressed = false;
+
+  // Button object
   const btn = {
     sprite: sprite,
     set active(value: boolean) {
       active = value;
-      
-      if(active) {
-        sprite.alpha = 1;
-      }else{
-        sprite.alpha = 0.5;
-      }
+      sprite.alpha = active ? 1 : 0.5;
     },
     get active() {
       return active;
     },
   };
 
-  sprite.interactive = true;
-  sprite.anchor.set(0.5);
+  sprite.on("pointerdown", () => {
+    pressed = true;
+    setScale(0.95);
+  });
 
-  sprite.width = 90;
-  sprite.height = 90;
-
-  sprite.x = sprite.width / 2 + (gameWidth - sprite.width) * x;
-  sprite.y = sprite.height / 2 + (gameHeight - sprite.height) * y;
-
-  sprite.on("pointertap", () => {
+  sprite.on("pointerup", () => {
+    pressed = false;
+    setScale(1);
     onClick(btn);
   });
 
