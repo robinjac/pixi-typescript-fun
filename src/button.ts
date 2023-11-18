@@ -10,22 +10,16 @@ type Button = {
 function createButton(
   source: SpriteSource,
   { x, y }: Point,
-  onClick: (btn: Button) => void
-) {
+  onClick: () => void
+): Button {
   const sprite = Sprite.from(source);
 
   sprite.interactive = true;
+  sprite.cursor = "pointer";
   sprite.anchor.set(0.5);
 
   const width = 90;
   const height = 90;
-
-  sprite.alpha = 1;
-  sprite.width = width;
-  sprite.height = height;
-
-  sprite.x = sprite.width / 2 + (gameWidth - sprite.width) * x;
-  sprite.y = sprite.height / 2 + (gameHeight - sprite.height) * y;
 
   const setScale = (scale: number) => {
     sprite.width = width * scale;
@@ -36,17 +30,12 @@ function createButton(
   let active = true;
   let pressed = false;
 
-  // Button object
-  const btn = {
-    sprite: sprite,
-    set active(value: boolean) {
-      active = value;
-      sprite.alpha = active ? 1 : 0.5;
-    },
-    get active() {
-      return active;
-    },
-  };
+  sprite.alpha = 1;
+  sprite.width = width;
+  sprite.height = height;
+
+  sprite.x = sprite.width / 2 + (gameWidth - sprite.width) * x;
+  sprite.y = sprite.height / 2 + (gameHeight - sprite.height) * y;
 
   sprite.on("pointerdown", () => {
     pressed = true;
@@ -56,10 +45,19 @@ function createButton(
   sprite.on("pointerup", () => {
     pressed = false;
     setScale(1);
-    onClick(btn);
+    onClick();
   });
 
-  return btn;
+  return {
+    sprite,
+    set active(value: boolean) {
+      active = value;
+      sprite.alpha = active ? 1 : 0.5;
+    },
+    get active() {
+      return active;
+    },
+  };
 }
 
 function createRectangularButton() {}

@@ -37,9 +37,9 @@ window.onload = async (): Promise<void> => {
   const textures = await loadGameAssets();
 
   const backgroundSprite = Sprite.from(textures.background);
-  const button = createButton(textures.sym1, { x: 0.5, y: 0.5 }, (self) => {
-    self.active = !self.active
-    console.log("hello world", self.active);
+  const button = createButton(textures.sym1, { x: 0.5, y: 0.5 }, () => {
+    button.active = !button.active;
+    console.log("hello world", button.active);
   });
 
   document.body.appendChild<HTMLCanvasElement>(game.view as HTMLCanvasElement);
