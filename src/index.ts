@@ -1,6 +1,7 @@
 import "./style.css";
 import { Assets, Sprite, Application } from "pixi.js";
-import { Tuple, takeFirst, takeSecond } from "./helpers";
+import { Tuple, takeFirst } from "./helpers";
+import { createButton } from "./button";
 
 const gameWidth = 1136;
 const gameHeight = 640;
@@ -31,7 +32,7 @@ async function loadGameAssets() {
   const textures: Tuple<string>[] = [...otherTextures, ...symTextures];
   const assetKeys = textures.map(takeFirst);
 
-  Assets.add(assetKeys, textures.map(takeSecond));
+  textures.forEach(([key, url]) => Assets.add(key, url))
 
   return Assets.load(assetKeys);
 }
