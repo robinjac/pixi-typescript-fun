@@ -1,5 +1,5 @@
-import './style.css';
-import { Assets, Sprite, Application } from 'pixi.js';
+import "./style.css";
+import { Assets, Sprite, Application } from "pixi.js";
 
 const gameWidth = 1136;
 const gameHeight = 640;
@@ -14,10 +14,10 @@ const stage = app.stage;
 
 
 async function loadGameAssets() {
-  Assets.add('background', 'assets/Background.png');
-  Assets.add('button', 'assets/button.png');
+  Assets.add("background", "assets/Background.png");
+  Assets.add("button", "assets/button.png");
   
-  return Assets.load(['background', 'button']);
+  return Assets.load(["background", "button"]);
 }
 
 function resizeCanvas(): void {
@@ -37,4 +37,4 @@ window.onload = async (): Promise<void> => {
   stage.addChild(backgroundSprite);
 };
 
-window.addEventListener('resize', resizeCanvas);
+window.addEventListener("resize", resizeCanvas);
