@@ -39,9 +39,17 @@ function createButton(
   });
 
   source.on("pointerup", () => {
-    pressed = false;
-    setScale(1);
-    onClick();
+    if (pressed) {
+        pressed = false;
+        setScale(1);
+        onClick();
+    }
+  });
+
+  source.on("pointerleave", () => {
+    if (pressed) {
+      setScale(1);
+    }
   });
 
   return {
