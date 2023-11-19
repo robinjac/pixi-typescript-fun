@@ -2,6 +2,8 @@ import { useScale, Sprite, Text, setPosition } from "./shared";
 
 type Button = {
   active: boolean;
+  disabled: boolean;
+  visible: boolean;
   source: Sprite | Text;
 };
 
@@ -14,11 +16,14 @@ function createButton(
   onClick: () => void
 ): Button {
   source.interactive = true;
+  source.visible = true;
   source.cursor = "pointer";
-  
+
   // Button state
   let active = true;
   let pressed = false;
+  let disabled = false;
+  let visible = true;
 
   source.alpha = 1;
   source.width = width;
@@ -43,10 +48,25 @@ function createButton(
     source,
     set active(value: boolean) {
       active = value;
-      source.alpha = active ? 1 : 0.5;
+      source.alpha = value ? 1 : 0.5;
     },
     get active() {
       return active;
+    },
+    set disabled(value: boolean) {
+      disabled = value;
+      source.interactive = !value;
+      source.alpha = value ? 0.5 : 1;
+    },
+    get disabled() {
+      return disabled;
+    },
+    set visible(value: boolean) {
+      visible = value;
+      source.visible = value;
+    },
+    get visible() {
+      return visible;
     },
   };
 }

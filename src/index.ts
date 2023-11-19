@@ -45,12 +45,11 @@ window.onload = async (): Promise<void> => {
 
   const background = Sprite.from(textures.background);
   const button = Sprite.from(textures.button);
-
-  const number = Sprite.from(textures.blank);
+  
   const mystery = Sprite.from(textures.mystery);
-
   setPosition(mystery, 0.51, 0.16);
 
+  const number = Sprite.from(textures.blank);
   useScale(number)(0.8);
   setPosition(number, 0.5, 0.1);
 
@@ -59,7 +58,6 @@ window.onload = async (): Promise<void> => {
 
   // Create lose scene
   const lose = Sprite.from(textures.lose);
-  useScale(lose)(1.1);
   setPosition(lose, 0.5, 0.45);
 
   const chooseButton = createButton(button, 0.5, 0.9, 160, 140, goToFinal);
@@ -84,8 +82,7 @@ window.onload = async (): Promise<void> => {
         button.active = game.hasSelected((index + 1) as Selected);
       }
 
-      chooseButton.active = game.maxSelectionReached;
-      chooseButton.source.interactive = game.maxSelectionReached;
+      chooseButton.disabled = !game.maxSelectionReached;
     });
 
     return button;
@@ -109,12 +106,12 @@ window.onload = async (): Promise<void> => {
       if (won) {
         setTimeout(() => {
           win.visible = true;
-          playAgainButton.source.visible = true;
+          playAgainButton.visible = true;
         }, 1000);
       } else {
         lose.visible = true;
-        playAgainButton.source.visible = true;
-        chooseButton.source.visible = false;
+        playAgainButton.visible = true;
+        chooseButton.visible = false;
       }
     }, 2000);
   }
@@ -124,22 +121,18 @@ window.onload = async (): Promise<void> => {
     lose.visible = false;
 
     for (const button of selectionButtons) {
-      button.source.interactive = true;
-      button.source.visible = true;
-      button.active = true;
+      button.disabled = false;
     }
 
-    playAgainButton.source.visible = false;
-
-    chooseButton.source.interactive = false;
-    chooseButton.source.visible = true;
-    chooseButton.active = false;
+    playAgainButton.visible = false;
+    chooseButton.disabled = true;
 
     number.texture = textures.blank as Texture;
     mystery.visible = true;
 
     game.clearSelection();
   }
+
   game.stage.addChild(background);
   game.stage.addChild(chooseButton.source);
 
