@@ -1,5 +1,5 @@
 import "./style.css";
-import { Assets, Sprite, Text, SpriteSource } from "pixi.js";
+import { Assets, Sprite, Text, SpriteSource, Texture } from "pixi.js";
 import { createButton, Button } from "./button";
 import {
   game,
@@ -44,9 +44,13 @@ window.onload = async (): Promise<void> => {
   const background = Sprite.from(textures.background);
   const button = Sprite.from(textures.button);
 
-  const blank = Sprite.from(textures.blank);
-  useScale(blank)(0.8);
-  setPosition(blank, 0.5, 0.1);
+  const number = Sprite.from(textures.blank);
+  const mystery = Sprite.from(textures.mystery);
+
+  setPosition(mystery, 0.51, 0.16);
+
+  useScale(number)(0.8);
+  setPosition(number, 0.5, 0.1);
 
   // Create win scene
   const win = Sprite.from(textures.win);
@@ -86,23 +90,31 @@ window.onload = async (): Promise<void> => {
   });
 
   function goToFinal() {
-    const won = game.hasSelected(
-      (Math.floor(Math.random() * 9) + 1) as Selected
-    );
+    const winnerNumber = (Math.floor(Math.random() * 9) + 1) as Selected;
+    const won = game.hasSelected(winnerNumber);
 
-    if (won) {
-      chooseButton.source.interactive = false;
-    } else {
-      chooseButton.source.visible = false;
-    }
+    chooseButton.source.interactive = false;
 
     for (const button of selectionButtons) {
       button.source.interactive = false;
     }
 
-    playAgainButton.source.visible = true;
+    setTimeout(() => {
+      const [key] = symTextures[winnerNumber - 1];
+      number.texture = textures[key] as Texture;
+      mystery.visible = false;
 
-    (won ? win : lose).visible = true;
+      if (won) {
+        setTimeout(() => {
+          win.visible = true;
+          playAgainButton.source.visible = true;
+        }, 1000);
+      } else {
+        lose.visible = true;
+        playAgainButton.source.visible = true;
+        chooseButton.source.visible = false;
+      }
+    }, 2000);
   }
 
   function goToStart() {
@@ -121,6 +133,9 @@ window.onload = async (): Promise<void> => {
     chooseButton.source.visible = true;
     chooseButton.active = false;
 
+    number.texture = textures.blank as Texture;
+    mystery.visible = true;
+
     game.clearSelection();
   }
   game.stage.addChild(background);
@@ -130,7 +145,8 @@ window.onload = async (): Promise<void> => {
     game.stage.addChild(button.source);
   }
 
-  game.stage.addChild(blank);
+  game.stage.addChild(number);
+  game.stage.addChild(mystery);
 
   game.stage.addChild(lose);
   game.stage.addChild(win);
