@@ -2,18 +2,7 @@ import { Application, Sprite, Text } from "pixi.js";
 
 type Tuple<a> = [a, a];
 
-/** A point is a normalized coordinate beteen 0 - 1 */
-type Point = { x: number; y: number };
-
 const takeFirst = <T>([first]: Tuple<T>): T => first;
-const takeSecond = <T>([, second]: Tuple<T>): T => second;
-const toPoint = ([first, second]: Tuple<number>): Point => ({
-  x: first,
-  y: second,
-});
-
-const easeInOut = (t: number) =>
-  t < 0.5 ? 4 * t ** 3 : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
 const useScale =
   (source: Sprite | Text, width?: number, height?: number) =>
@@ -49,7 +38,7 @@ const game = {
   get maxSelectionReached() {
     return selectedValues.size === 5;
   },
-  clearSelection: () => selectedValues.clear()
+  clearSelection: () => selectedValues.clear(),
 };
 
 /** Sets the position with normalized coordinates (values 0 - 1) within the game screen */
@@ -64,14 +53,10 @@ const repeat9 = <T>(fn: (index: number) => T): T[] =>
 
 export {
   Tuple,
-  Point,
   Sprite,
   Text,
   Selected,
   takeFirst,
-  takeSecond,
-  toPoint,
-  easeInOut,
   useScale,
   setPosition,
   repeat9,
