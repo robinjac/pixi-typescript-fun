@@ -9,6 +9,8 @@ import {
   setPosition,
   repeat9,
   Selected,
+  gameWidth,
+  gameHeight,
 } from "./shared";
 
 Text.defaultResolution = 3;
@@ -158,8 +160,11 @@ window.onload = async (): Promise<void> => {
 
 function resizeCanvas(): void {
   game.app.renderer.resize(window.innerWidth, window.innerHeight);
-  //stage.scale.x = window.innerWidth / gameWidth;
-  //stage.scale.y = window.innerHeight / gameHeight;
+
+  game.stage.scale.x = window.innerWidth / gameWidth;
+  game.stage.scale.y = window.innerWidth / gameWidth;
+
+  game.stage.y = (window.innerHeight - game.stage.height) / 2;
 }
 
 document.body.appendChild<HTMLCanvasElement>(
