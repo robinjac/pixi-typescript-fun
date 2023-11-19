@@ -39,39 +39,61 @@ window.onload = async (): Promise<void> => {
   const win = Sprite.from(textures.win);
   const lose = Sprite.from(textures.lose);
   const one = Sprite.from(textures.sym1);
-
-  const button = createButton(one, 0.5, 0.5, 90, 90, () => {
-    button.active = !button.active;
-    win.alpha = 1;
-    console.log("hello world", button.active);
-  });
+  const button = Sprite.from(textures.button);
 
   Text.defaultResolution = 2;
   Text.defaultAutoResolution = false;
 
-  win.alpha = 0;
+  useScale(lose)(1.5);
+  setPosition(lose, 0.5, 0.5);
 
-  // Create a text object
-  const text = new Text("PLAY AGAIN", { fill: 0xffffff, fontSize: 14 });
+  const chooseButton = createButton(button, 0.5, 0.8, 120, 110, () => {
 
-  const playAgainButton = createButton(text, 0.5, 0.9, 150, 50, () => {
-    console.log("restart game");
-    win.alpha = 0;
+    oneButton.source.visible = false;
+    chooseButton.source.visible = false;
+    playAgainButton.source.visible = true;
+    
+    (Math.floor(Math.random() * 9) + 1 === 1 ? win : lose).visible = true;
   });
+
+  const oneButton = createButton(one, 0.5, 0.5, 90, 90, () => {
+    oneButton.active = !oneButton.active;
+    chooseButton.source.visible = oneButton.active;
+  });
+
+
+  const playAgainButton = createButton(
+    new Text("PLAY AGAIN", { fill: 0xffffff, fontSize: 14 }),
+    0.5,
+    0.8,
+    150,
+    50,
+    () => {
+      win.visible = false;
+      lose.visible = false;
+
+      oneButton.source.visible = true;
+      oneButton.active = false;
+      playAgainButton.source.visible = false;
+    }
+  );
+
+  // Initial state
+  win.visible = false;
+  lose.visible = false;
+
+  oneButton.source.visible = true;
+  oneButton.active = false;
+  playAgainButton.source.visible = false;
 
   document.body.appendChild<HTMLCanvasElement>(game.view as HTMLCanvasElement);
   resizeCanvas();
 
   stage.addChild(background);
-  stage.addChild(button.source);
-  
-
-  useScale(lose)(1.5);
-
-  setPosition(lose, 0.5, 0.3);
+  stage.addChild(oneButton.source);
+  stage.addChild(chooseButton.source);
 
   stage.addChild(lose);
-
   stage.addChild(win);
   stage.addChild(playAgainButton.source);
 };
