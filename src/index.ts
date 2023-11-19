@@ -60,12 +60,12 @@ window.onload = async (): Promise<void> => {
   const lose = Sprite.from(textures.lose);
   setPosition(lose, 0.5, 0.45);
 
-  const chooseButton = createButton(button, 0.5, 0.9, 160, 140, goToFinal);
+  const chooseButton = createButton(button, 0.5, 0.92, 160, 140, goToFinal);
 
   const playAgainButton = createButton(
     new Text("PLAY AGAIN", { fill: 0xffffff, fontSize: 14 }),
     0.5,
-    0.8,
+    0.86,
     180,
     60,
     goToStart
@@ -75,7 +75,7 @@ window.onload = async (): Promise<void> => {
     const [key] = symTextures[num - 1];
     const sprite = Sprite.from(textures[key]);
 
-    const button = createButton(sprite, 0.1 * num, 0.6, 100, 100, () => {
+    const button = createButton(sprite, num / 8.7 - 0.08, 0.6, 102, 102, () => {
       game.select(num as Selected);
 
       for (const [index, button] of selectionButtons.entries()) {
