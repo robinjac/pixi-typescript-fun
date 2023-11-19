@@ -41,6 +41,8 @@ const setPosition = (source: Sprite | Text, x: number, y: number) => {
     source.y = source.height / 2 + (gameHeight - source.height) * y;
 }
 
+const repeat9 = <T>(fn: (index: number) => T): T[] => Array.from({ length: 9 }, (_, index) => fn(index));
+
 export {
   Tuple,
   Point,
@@ -52,6 +54,7 @@ export {
   easeInOut,
   useScale,
   setPosition,
+  repeat9,
   game,
   stage,
   gameWidth,

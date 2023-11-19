@@ -1,29 +1,41 @@
 import "./style.css";
-import { Assets, Sprite, Text, Container } from "pixi.js";
-import { createButton } from "./button";
-import { game, stage, Tuple, takeFirst, useScale, setPosition } from "./shared";
+import { Assets, Sprite, Text, SpriteSource } from "pixi.js";
+import { createButton, Button } from "./button";
+import {
+  game,
+  stage,
+  Tuple,
+  takeFirst,
+  useScale,
+  setPosition,
+  repeat9,
+} from "./shared";
 
-async function loadGameAssets() {
-  const otherTextures: Tuple<string>[] = [
-    ["background", "assets/Background.png"],
-    ["blank", "assets/blank.png"],
-    ["button", "assets/button.png"],
-    ["lose", "assets/lose.png"],
-    ["mystery", "assets/mystery.png"],
-    ["win", "assets/win.png"],
-  ];
+Text.defaultResolution = 2;
+Text.defaultAutoResolution = false;
 
-  const symTextures: Tuple<string>[] = Array.from({ length: 9 }, (_, index) => [
-    `sym${index + 1}`,
-    `assets/sym${index + 1}.png`,
-  ]);
+const otherTextures: Tuple<string>[] = [
+  ["background", "assets/Background.png"],
+  ["blank", "assets/blank.png"],
+  ["button", "assets/button.png"],
+  ["lose", "assets/lose.png"],
+  ["mystery", "assets/mystery.png"],
+  ["win", "assets/win.png"],
+];
 
+const symTextures: Tuple<string>[] = repeat9((index) => [
+  `sym${index + 1}`,
+  `assets/sym${index + 1}.png`,
+]);
+
+async function loadGameAssets(): Promise<Record<string, SpriteSource>> {
   const textures: Tuple<string>[] = [...otherTextures, ...symTextures];
-  const assetKeys = textures.map(takeFirst);
 
-  textures.forEach(([key, url]) => Assets.add(key, url));
+  for (const [key, url] of textures) {
+    Assets.add(key, url);
+  }
 
-  return Assets.load(assetKeys);
+  return Assets.load(textures.map(takeFirst));
 }
 
 function resizeCanvas(): void {
@@ -38,28 +50,14 @@ window.onload = async (): Promise<void> => {
   const background = Sprite.from(textures.background);
   const win = Sprite.from(textures.win);
   const lose = Sprite.from(textures.lose);
-  const one = Sprite.from(textures.sym1);
   const button = Sprite.from(textures.button);
-
-  Text.defaultResolution = 2;
-  Text.defaultAutoResolution = false;
 
   useScale(lose)(1.5);
   setPosition(lose, 0.5, 0.5);
 
-  const chooseButton = createButton(button, 0.5, 0.8, 120, 110, () => {
-
-    oneButton.source.visible = false;
-    chooseButton.source.visible = false;
-    playAgainButton.source.visible = true;
-    
-    (Math.floor(Math.random() * 9) + 1 === 1 ? win : lose).visible = true;
-  });
-
-  const oneButton = createButton(one, 0.5, 0.5, 90, 90, () => {
-    oneButton.active = !oneButton.active;
-    chooseButton.source.visible = oneButton.active;
-  });
+  const chooseButton = createButton(button, 0.5, 0.8, 120, 110, () =>
+    finalGameState(1)
+  );
 
 
   const playAgainButton = createButton(
@@ -68,30 +66,53 @@ window.onload = async (): Promise<void> => {
     0.8,
     150,
     50,
-    () => {
-      win.visible = false;
-      lose.visible = false;
-
-      oneButton.source.visible = true;
-      oneButton.active = false;
-      playAgainButton.source.visible = false;
-    }
+    initialGameState
   );
 
-  // Initial state
-  win.visible = false;
-  lose.visible = false;
+  const selectionButtons: Button[] = repeat9(index => {
+    const [key,] = symTextures[index];
+    const sprite = Sprite.from(textures[key])
 
-  oneButton.source.visible = true;
-  oneButton.active = false;
-  playAgainButton.source.visible = false;
+    const button = createButton(sprite, 0.1 * (index + 1), 0.5, 90, 90, () => {
+      button.active = !button.active;
+      chooseButton.source.visible = false;
+    })
+
+    return button;
+  })
+
+  function finalGameState(selection: number) {
+    selectionButtons[selection - 1].source.visible = false;
+    chooseButton.source.visible = false;
+    playAgainButton.source.visible = true;
+
+    (Math.floor(Math.random() * 9) + 1 === selection ? win : lose).visible =
+      true;
+  }
+
+  function initialGameState() {
+    win.visible = false;
+    lose.visible = false;
+
+    for(const button of selectionButtons) {
+      button.source.visible = true;
+      button.active = false;
+    }
+
+    playAgainButton.source.visible = false;
+  }
 
   document.body.appendChild<HTMLCanvasElement>(game.view as HTMLCanvasElement);
+
   resizeCanvas();
+  initialGameState();
 
   stage.addChild(background);
-  stage.addChild(oneButton.source);
   stage.addChild(chooseButton.source);
+
+  for(const button of selectionButtons) {
+    stage.addChild(button.source);
+  }
 
   stage.addChild(lose);
   stage.addChild(win);
