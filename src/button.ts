@@ -1,5 +1,4 @@
-import { Sprite, Text } from "pixi.js";
-import { gameHeight, gameWidth } from "./shared";
+import { useScale, Sprite, Text, setPosition } from "./shared";
 
 type Button = {
   active: boolean;
@@ -16,13 +15,7 @@ function createButton(
 ): Button {
   source.interactive = true;
   source.cursor = "pointer";
-  source.anchor.set(0.5);
-
-  const setScale = (scale: number) => {
-    source.width = width * scale;
-    source.height = height * scale;
-  };
-
+  
   // Button state
   let active = true;
   let pressed = false;
@@ -31,8 +24,9 @@ function createButton(
   source.width = width;
   source.height = height;
 
-  source.x = source.width / 2 + (gameWidth - source.width) * x;
-  source.y = source.height / 2 + (gameHeight - source.height) * y;
+  setPosition(source, x, y);
+
+  const setScale = useScale(source, width, height);
 
   source.on("pointerdown", () => {
     pressed = true;
@@ -57,6 +51,4 @@ function createButton(
   };
 }
 
-function createRectangularButton() {}
-
-export { createButton, createRectangularButton };
+export { createButton, Button };
