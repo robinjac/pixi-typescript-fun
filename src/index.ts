@@ -1,5 +1,5 @@
 import "./style.css";
-import { Assets, Sprite } from "pixi.js";
+import { Assets, Sprite, Graphics, Text, Container } from "pixi.js";
 import { Tuple, takeFirst } from "./helpers";
 import { createButton } from "./button";
 import { game, stage } from "./shared";
@@ -36,17 +36,30 @@ function resizeCanvas(): void {
 window.onload = async (): Promise<void> => {
   const textures = await loadGameAssets();
 
-  const backgroundSprite = Sprite.from(textures.background);
-  const button = createButton(textures.sym1, { x: 0.5, y: 0.5 }, () => {
+  const background = Sprite.from(textures.background);
+  const one = Sprite.from(textures.sym1);
+
+  const button = createButton(one, 0.5, 0.5, 90, 90, () => {
     button.active = !button.active;
     console.log("hello world", button.active);
+  });
+
+  Text.defaultResolution = 2;
+  Text.defaultAutoResolution = false;
+
+  // Create a text object
+  const text = new Text("PLAY AGAIN", { fill: 0xffffff, fontSize: 14 });
+
+  const button2 = createButton(text, 0.5, 0.9, 150, 50, () => {
+    console.log("restart game");
   });
 
   document.body.appendChild<HTMLCanvasElement>(game.view as HTMLCanvasElement);
   resizeCanvas();
 
-  stage.addChild(backgroundSprite);
-  stage.addChild(button.sprite);
+  stage.addChild(background);
+  stage.addChild(button.source);
+  stage.addChild(button2.source);
 };
 
 window.addEventListener("resize", resizeCanvas);

@@ -1,58 +1,55 @@
-import { Sprite, SpriteSource } from "pixi.js";
-import { Point } from "./helpers";
+import { Sprite, Text } from "pixi.js";
 import { gameHeight, gameWidth } from "./shared";
 
 type Button = {
   active: boolean;
-  sprite: Sprite;
+  source: Sprite | Text;
 };
 
 function createButton(
-  source: SpriteSource,
-  { x, y }: Point,
+  source: Sprite | Text,
+  x: number,
+  y: number,
+  width: number,
+  height: number,
   onClick: () => void
 ): Button {
-  const sprite = Sprite.from(source);
-
-  sprite.interactive = true;
-  sprite.cursor = "pointer";
-  sprite.anchor.set(0.5);
-
-  const width = 90;
-  const height = 90;
+  source.interactive = true;
+  source.cursor = "pointer";
+  source.anchor.set(0.5);
 
   const setScale = (scale: number) => {
-    sprite.width = width * scale;
-    sprite.height = height * scale;
+    source.width = width * scale;
+    source.height = height * scale;
   };
 
   // Button state
   let active = true;
   let pressed = false;
 
-  sprite.alpha = 1;
-  sprite.width = width;
-  sprite.height = height;
+  source.alpha = 1;
+  source.width = width;
+  source.height = height;
 
-  sprite.x = sprite.width / 2 + (gameWidth - sprite.width) * x;
-  sprite.y = sprite.height / 2 + (gameHeight - sprite.height) * y;
+  source.x = source.width / 2 + (gameWidth - source.width) * x;
+  source.y = source.height / 2 + (gameHeight - source.height) * y;
 
-  sprite.on("pointerdown", () => {
+  source.on("pointerdown", () => {
     pressed = true;
     setScale(0.95);
   });
 
-  sprite.on("pointerup", () => {
+  source.on("pointerup", () => {
     pressed = false;
     setScale(1);
     onClick();
   });
 
   return {
-    sprite,
+    source,
     set active(value: boolean) {
       active = value;
-      sprite.alpha = active ? 1 : 0.5;
+      source.alpha = active ? 1 : 0.5;
     },
     get active() {
       return active;
