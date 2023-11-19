@@ -45,7 +45,7 @@ window.onload = async (): Promise<void> => {
 
   const background = Sprite.from(textures.background);
   const button = Sprite.from(textures.button);
-  
+
   const mystery = Sprite.from(textures.mystery);
   setPosition(mystery, 0.51, 0.16);
 
@@ -157,7 +157,14 @@ function resizeCanvas(): void {
   game.stage.scale.x = window.innerWidth / gameWidth;
   game.stage.scale.y = window.innerWidth / gameWidth;
 
-  game.stage.y = (window.innerHeight - game.stage.height) / 2;
+  if (game.stage.height >= window.innerHeight) {
+    game.stage.scale.x = window.innerHeight / gameHeight;
+    game.stage.scale.y = window.innerHeight / gameHeight;
+
+    game.stage.x = (window.innerWidth - game.stage.width) / 2;
+  } else {
+    game.stage.y = (window.innerHeight - game.stage.height) / 2;
+  }
 }
 
 document.body.appendChild<HTMLCanvasElement>(
