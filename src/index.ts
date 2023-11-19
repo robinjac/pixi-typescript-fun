@@ -47,7 +47,7 @@ window.onload = async (): Promise<void> => {
   const button = Sprite.from(textures.button);
 
   const mystery = Sprite.from(textures.mystery);
-  setPosition(mystery, 0.51, 0.16);
+  setPosition(mystery, 0.5, 0.16);
 
   const number = Sprite.from(textures.blank);
   useScale(number)(0.8);
@@ -92,28 +92,36 @@ window.onload = async (): Promise<void> => {
     const winnerNumber = (Math.floor(Math.random() * 9) + 1) as Selected;
     const won = game.hasSelected(winnerNumber);
 
-    chooseButton.source.interactive = false;
+    chooseButton.disabled = true;
 
     for (const button of selectionButtons) {
       button.source.interactive = false;
     }
 
+    const animateMystery = (delta:number) => {
+      mystery.rotation -= 0.2;
+    }
+
+    game.app.ticker.add(animateMystery);
+
     setTimeout(() => {
       const [key] = symTextures[winnerNumber - 1];
       number.texture = textures[key] as Texture;
+
+      game.app.ticker.remove(animateMystery);
       mystery.visible = false;
 
       if (won) {
         setTimeout(() => {
           win.visible = true;
           playAgainButton.visible = true;
-        }, 1000);
+        }, 1400);
       } else {
         lose.visible = true;
         playAgainButton.visible = true;
         chooseButton.visible = false;
       }
-    }, 2000);
+    }, 1000);
   }
 
   function goToStart() {
@@ -125,10 +133,12 @@ window.onload = async (): Promise<void> => {
     }
 
     playAgainButton.visible = false;
+    chooseButton.visible = true;
     chooseButton.disabled = true;
 
     number.texture = textures.blank as Texture;
     mystery.visible = true;
+    mystery.rotation  = 0;
 
     game.clearSelection();
   }
