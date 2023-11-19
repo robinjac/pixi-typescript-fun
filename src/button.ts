@@ -40,16 +40,20 @@ function createButton(
 
   source.on("pointerup", () => {
     if (pressed) {
-        pressed = false;
-        setScale(1);
-        onClick();
+      pressed = false;
+      setScale(1);
+      onClick();
+    }
+  });
+
+  source.on("pointerover", () => {
+    if (!pressed) {
+      setScale(1.05);
     }
   });
 
   source.on("pointerleave", () => {
-    if (pressed) {
-      setScale(1);
-    }
+    setScale(1);
   });
 
   return {
