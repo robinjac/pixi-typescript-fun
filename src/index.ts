@@ -98,9 +98,9 @@ window.onload = async (): Promise<void> => {
       button.source.interactive = false;
     }
 
-    const animateMystery = (delta:number) => {
+    const animateMystery = (delta: number) => {
       mystery.rotation -= 0.2;
-    }
+    };
 
     game.app.ticker.add(animateMystery);
 
@@ -114,8 +114,21 @@ window.onload = async (): Promise<void> => {
       if (won) {
         setTimeout(() => {
           win.visible = true;
-          playAgainButton.visible = true;
-        }, 1400);
+          win.alpha = 0;
+
+          const animateWin = (delta: number) => {
+            win.alpha += 0.1;
+            if (win.alpha <= 1) {
+              win.alpha += 0.1;
+            } else {
+              win.alpha = 1;
+              game.app.ticker.remove(animateWin);
+              playAgainButton.visible = true;
+            }
+          };
+
+          game.app.ticker.add(animateWin);
+        }, 1200);
       } else {
         lose.visible = true;
         playAgainButton.visible = true;
@@ -138,7 +151,7 @@ window.onload = async (): Promise<void> => {
 
     number.texture = textures.blank as Texture;
     mystery.visible = true;
-    mystery.rotation  = 0;
+    mystery.rotation = 0;
 
     game.clearSelection();
   }

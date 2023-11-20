@@ -4,12 +4,15 @@ type Tuple<a> = [a, a];
 
 const takeFirst = <T>([first]: Tuple<T>): T => first;
 
-const useScale =
-  (source: Sprite | Text, width?: number, height?: number) =>
-  (scale: number) => {
-    source.width = (width ?? source.width) * scale;
-    source.height = (height ?? source.height) * scale;
+const useScale = (source: Sprite | Text, width?: number, height?: number) => {
+  const w = width ?? source.width;
+  const h = height ?? source.height;
+
+  return (scale: number) => {
+    source.width = w * scale;
+    source.height = h * scale;
   };
+};
 
 const gameWidth = 1136;
 const gameHeight = 640;
